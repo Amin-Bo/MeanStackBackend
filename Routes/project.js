@@ -144,13 +144,13 @@ router.delete("/delete/:_id",(req, res) =>{
 
 });
 router.get("/projects/", (req, res, next) => {
-  Project.find({  }, (err, project) => {
+  Project.find({}, (err, project) => {
     if (err) {
       console.log(err);
       return res.json({ message: "Project not found" });
     } else {
       return res.json({message: "all projects", project: project });
     }
-  }).populate("details").populate("owner");
+  }).populate("details");
 });
 module.exports = router;
