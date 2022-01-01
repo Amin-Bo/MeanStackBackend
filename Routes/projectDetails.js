@@ -3,6 +3,7 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const Details = require("../Models/projectdetails");
 const Project = require("../Models/projects");
+const User = require("../Models/users");
 
 //Add project
 router.post("/add/:_id", (req, res, next) => {
@@ -92,15 +93,25 @@ router.get("/detail/:_id", (req, res, next) => {
   }).populate("project");
 });
 router.get("/details/:_id", (req, res, next) => {
+  let token = req.headers.authorization||req.body.token;
   let id = req.params._id;
-  Project.findOne({ _id: req.params._id }, (err, project) => {
-    if (err) {
-      console.log(err);
-      return res.json({ message: "Project not found" });
-    } else {
-      return res.json({ project: project });
-    }
-  }).populate("details");
+  jwt.verify(token, process.env.SECRET, (err, decoded) => {
+    let user=decoded.user;
+    console.log(user)
+    User.findOne({_id: user._id}, (err, user) => {
+      if (err) throw err;
+      else{
+        Project.findOne({ _id: req.params._id }, (err, project) => {
+          if (err) {
+            console.log(err);
+            return res.json({ message: "Project not found" });
+          } else {
+            return res.json({ project: project });
+          }
+        }).populate("details");
+      }
+});
+});
 });
 
 router.post("/update/:_id", (req, res) => {

@@ -148,20 +148,24 @@ router.get("/projects/", (req, res, next) => {
   //console.log(token)
   jwt.verify(token, process.env.SECRET, (err, decoded) => {
     let user=decoded.user;
-    console.log(decoded)
+    //console.log(decoded)
     User.findOne({_id: user._id}, (err, user) => {
       if (err) throw err;
     
     else{
 
-      User.find({_id:user._id}, (err, project) => {
+      User.find({_id:user._id}, (err, user) => {
         if (err) {
           console.log(err);
           return res.json({ message: "Project not found" });
         } else {
-          return res.json({message: "all projects", project: project });
+          console.log(decoded.user.project)
+            Project.find({_id:decoded.user.project}, (err, p)=>{
+                
+              return res.json({message: "all projects", project: p });
+            }).populate("details")
         }
-      }).populate("project").populate("project.details");
+      });
     }
   })
 
