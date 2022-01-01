@@ -112,6 +112,20 @@ router.get('/profile', passport.authenticate('jwt', { session: false }), (req, r
     res.json({ success: true, message: 'profile ', user: req.user })
 });
 
+/*router.get('/getProjects', (req, res, next) => {
+    let token = req.headers.authorization;
+    jwt.verify(token, process.env.SECRET, (err, decoded) => {
+       // console.log(decoded);
+        User.find({_id: decoded.user._id }).populate('project').then((decoded) => {
+            if (decoded) {
+                return res.json({user:decoded.user})
+            }
+        }); 
+    });
+    res.json({ success: true, message: 'profile ', user: req.user })
+
+})*/
+
 router.post("/update", (req, res) => {
     const { firstName, lastName, email, password } = req.body;
     newUser = req.body;

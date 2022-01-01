@@ -7,7 +7,7 @@ const ProjectDetail = require("../Models/projectdetails");
 const User = require("../Models/users");
 
 //Add project
-/*router.post("/AddProject", (req, res, next) => {
+router.post("/AddProject", (req, res, next) => {
   let newProject = new Project({
     Title: req.body.Title,
     Category: req.body.Category,
@@ -15,47 +15,54 @@ const User = require("../Models/users");
     StartDate: req.body.StartDate,
     FinishDate: req.body.FinishDate,
   });
-  let token = req.headers.authorization;
+    let token = req.headers.authorization.split(' ')[0];
   //console.log(token)
   jwt.verify(token, process.env.SECRET, (err, decoded) => {
-    console.log(decoded);
+    
+    let user=decoded.user;
     User.find({_id: decoded.user._id }).populate('project').then((decoded) => {
       if (!decoded){
         console.log("err")
       }
       else{
-        let user=decoded.user;
         Project.findOne({ Title: req.body.Title }, (err, project) => {
-        //Error during exuting the query
-        if (project) {
-          console.log(project);
+    //Error during exuting the query
+    if (project) {
+      //console.log(project);
+      return res.send({
+        success: false,
+        message: "Error, project already exists",
+      });
+    } else {
+
+      newProject.save((err, project) => {
+        if (err) {
+          console.log(err);
           return res.send({
             success: false,
-            message: "Error, project already exists",
-          });
-        } else {
-          newProject.save((err, project) => {
-            if (err) {
-              console.log(err);
-              return res.send({
-                success: false,
-                message: "Failed to save the project",
-              });
-            }
-            else{
-              console.log(user)
-              //User.find({_id:user._id}, (err, u) => {console.log(u)});
-              // res.send({
-              //   success: true,
-              //   message: "project Saved",
-              //   user,
-              // });
-            }
+            message: "Failed to save the project",
           });
         }
-      });
-        console.log(decoded)
-        res.send({decoded})
+        else{
+         // console.log(user)
+          //console.log(project._id);
+           User.findOneAndUpdate({_id:user._id}, {$addToSet:{"project":project._id}}, (err, user) => {
+             if (err) throw err;
+            
+           })
+          // user.save()
+          res.send({
+          success: true,
+          message: "project Saved",
+          user,
+        });
+      }
+    }); 
+       
+    }
+  });
+        // console.log(project);
+        // res.send({project})
       }
     });
   });
@@ -85,7 +92,7 @@ const User = require("../Models/users");
   //     });
   //   }
   // });
-});*/
+});
 
 router.get("/project/:_id", (req, res, next) => {
   Project.find({ _id: req.params._id }, (err, project) => {
@@ -144,6 +151,6 @@ router.get("/projects/", (req, res, next) => {
     } else {
       return res.json({message: "all projects", project: project });
     }
-  }).populate("details");
+  }).populate("details").populate("owner");
 });
 module.exports = router;
