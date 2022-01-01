@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const Schema = mongoose.Schema;
 
 // Schema Definition
 //TODO: Assignment: Add Validate rule for email to be unique
@@ -10,7 +11,7 @@ const UserSchema = mongoose.Schema({
   phone: { type: String },
   email: { type: String, required: true },
   password: { type: String, required: true },
-
+  project : { type: Schema.Types.ObjectId, ref: 'Project' },
 });
 
 //Pre Save Hook. Used to hash the password
