@@ -144,13 +144,27 @@ router.delete("/delete/:_id",(req, res) =>{
 
 });
 router.get("/projects/", (req, res, next) => {
-  Project.find({}, (err, project) => {
-    if (err) {
-      console.log(err);
-      return res.json({ message: "Project not found" });
-    } else {
-      return res.json({message: "all projects", project: project });
+  let token = req.headers.authorization||req.body.token;
+  //console.log(token)
+  jwt.verify(token, process.env.SECRET, (err, decoded) => {
+    let user=decoded.user;
+    console.log(decoded)
+    User.findOne({_id: user._id}, (err, user) => {
+      if (err) throw err;
+    
+    else{
+
+      User.find({_id:user._id}, (err, project) => {
+        if (err) {
+          console.log(err);
+          return res.json({ message: "Project not found" });
+        } else {
+          return res.json({message: "all projects", project: project });
+        }
+      }).populate("project").populate("project.details");
     }
-  }).populate("details");
+  })
+
+});
 });
 module.exports = router;
