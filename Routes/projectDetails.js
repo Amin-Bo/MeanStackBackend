@@ -93,14 +93,14 @@ router.get("/detail/:_id", (req, res, next) => {
 });
 router.get("/details/:_id", (req, res, next) => {
   let id = req.params._id;
-  Details.findOne({ "list._id": id }, { list: 1, _id: 0 }, (err, project) => {
+  Project.findOne({ _id: req.params._id }, (err, project) => {
     if (err) {
       console.log(err);
       return res.json({ message: "Project not found" });
     } else {
-      return res.json({ list: project });
+      return res.json({ project: project });
     }
-  }).populate("project");
+  }).populate("details");
 });
 
 router.post("/update/:_id", (req, res) => {
