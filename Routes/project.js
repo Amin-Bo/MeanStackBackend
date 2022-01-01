@@ -15,12 +15,12 @@ router.post("/AddProject", (req, res, next) => {
     StartDate: req.body.StartDate,
     FinishDate: req.body.FinishDate,
   });
-    let token = req.headers.authorization.split(' ')[0];
+  let token = req.headers.authorization||req.body.token;
   //console.log(token)
   jwt.verify(token, process.env.SECRET, (err, decoded) => {
     
     let user=decoded.user;
-    User.find({_id: decoded.user._id }).populate('project').then((decoded) => {
+    User.find({_id: decoded.user._id }).then((decoded) => {
       if (!decoded){
         console.log("err")
       }

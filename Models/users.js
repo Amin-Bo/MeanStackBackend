@@ -11,7 +11,7 @@ const UserSchema = mongoose.Schema({
   phone: { type: String },
   email: { type: String, required: true },
   password: { type: String, required: true },
-  project : { type: Schema.Types.ObjectId, ref: 'Project' },
+  project :[ { type: Schema.Types.ObjectId, ref: 'Project' }],
 });
 
 //Pre Save Hook. Used to hash the password

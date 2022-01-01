@@ -108,8 +108,15 @@ router.post('/register', (req, res, next) => {
 });
 
 router.get('/profile', passport.authenticate('jwt', { session: false }), (req, res, next) => {
-    req.user.password = ''
-    res.json({ success: true, message: 'profile ', user: req.user })
+    let token = req.headers.authorization;
+    token = token.substring(4, token.length);
+    jwt.verify(token, process.env.SECRET, (err, decoded) => {
+        User.find({_id: decoded.user._id},(err, user)=>{
+            if (err) return res.json({messsage:"error"});
+            else{return res.json(user)}
+        }).populate("project");
+    })
+  
 });
 
 /*router.get('/getProjects', (req, res, next) => {
