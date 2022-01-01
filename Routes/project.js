@@ -144,6 +144,7 @@ router.delete("/delete/:_id",(req, res) =>{
 
 });
 router.get("/projects/", (req, res, next) => {
+  newProject={};
   let token = req.headers.authorization||req.body.token;
   //console.log(token)
   jwt.verify(token, process.env.SECRET, (err, decoded) => {
@@ -159,10 +160,32 @@ router.get("/projects/", (req, res, next) => {
           console.log(err);
           return res.json({ message: "Project not found" });
         } else {
-          console.log(decoded.user.project)
-            Project.find({_id:decoded.user.project}, (err, p)=>{
-                
-              return res.json({message: "all projects", project: p });
+          Project.find({_id:decoded.user.project}, (err, p)=>{
+              //console.log(p[0].details.list[1].status);
+                let toDo=[]
+                let doing=[]
+                let done=[]
+                 for(let i = 0; i <p.length;i++){
+                   
+                   console.log(p[i].details.list[1].status)
+                   if (p[i].details.list[1].status='done') {
+                     done.push(p[i].details.list)
+                  }
+
+                  else if (p[i].details.list[1].status=='toDo'){
+                    toDo.push(p[i].details.list)
+                  }
+                  else {
+                    doing.push(p[i].details.list)
+
+                  }
+               newProject.project=p;
+               newProject.toDo=toDo;
+               newProject.doing=doing;
+               newProject.done=done;
+               
+                 }
+              return res.json({message: "all projects", project: newProject });
             }).populate("details")
         }
       });
