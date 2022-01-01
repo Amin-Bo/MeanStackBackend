@@ -142,7 +142,7 @@ router.post("/update", (req, res) => {
             newUser.password = hash;
         });
     });
-    let token =req.headers.authorization.split(' ')[1] ||req.body.token; //token
+    let token =req.headers.authorization ||req.body.token; //token
 
     //token = token.substring(4, token.length)
     jwt.verify(token, process.env.SECRET, (err, decoded) => {
