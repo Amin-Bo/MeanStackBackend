@@ -107,9 +107,9 @@ router.post('/register', (req, res, next) => {
 
 });
 
-router.get('/profile', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+router.get('/profile', (req, res, next) => {
     let token = req.headers.authorization;
-    token = token.substring(4, token.length);
+  
     jwt.verify(token, process.env.SECRET, (err, decoded) => {
         User.find({_id: decoded.user._id},(err, user)=>{
             if (err) return res.json({messsage:"error"});
