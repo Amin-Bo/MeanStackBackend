@@ -11,6 +11,7 @@ app.use(cors())
 const user = require('./Routes/users');
 const project = require('./Routes/project');
 const detail = require('./Routes/projectDetails');
+const admin = require('./Routes/admin');
 
 // DB connection
 //-----------------------------------------------//
@@ -42,6 +43,7 @@ require('./config/passport')(passport)
 app.use('/user',user);
 app.use('/project',project);
 app.use('/detail',detail);
+app.use('/admin',admin);
 
 
 app.use('/home',passport.authenticate("jwt",{session:false}),(req, res)=>{
