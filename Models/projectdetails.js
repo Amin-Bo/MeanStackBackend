@@ -7,7 +7,7 @@ const ProjectDetailsSchema = mongoose.Schema({
   list:[
     {
     title:{type:String, require:true},
-    status:{type:String, require:true}
+    status:{type:String, require:true ,default:"toDo"}
   }
   ] 
 

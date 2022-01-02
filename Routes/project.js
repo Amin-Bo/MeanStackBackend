@@ -162,28 +162,29 @@ router.get("/projects/", (req, res, next) => {
         } else {
           Project.find({_id:decoded.user.project}, (err, p)=>{
               //console.log(p[0].details.list[1].status);
-                let toDo=[]
-                let doing=[]
-                let done=[]
+                let toDo=[];
+                let doing=[];
+                let done=[];
+                //console.log(p.length)
                  for(let i = 0; i <p.length;i++){
                    
-                   console.log(p[i].details.list[1].status)
-                   if (p[i].details.list[1].status='done') {
-                     done.push(p[i].details.list)
+                 //console.log(p[i].details.list[0].status);
+                   if( (p[i].details.list[1].status=='done')||(p[i].details.list[0].status=='done')) {
+                     done.push(p[i].details.list[0].title)
                   }
 
-                  else if (p[i].details.list[1].status=='toDo'){
-                    toDo.push(p[i].details.list)
+                  if ((p[i].details.list[1].status=='toDo')||(p[i].details.list[0].status=='toDo')){
+                    toDo.push(p[i].details.list[0].title)
                   }
-                  else {
-                    doing.push(p[i].details.list)
+                  if ((p[i].details.list[1].status=='doing')||(p[i].details.list[0].status=='doing')) {
+                    doing.push(p[i].details.list[0].title)
 
                   }
                newProject.project=p;
                newProject.toDo=toDo;
-               newProject.doing=doing;
                newProject.done=done;
-               
+               newProject.doing=doing;
+               console.log(newProject.doing);
                  }
               return res.json({message: "all projects", project: newProject });
             }).populate("details")
