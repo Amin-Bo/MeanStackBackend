@@ -168,23 +168,7 @@ router.get("/projects/", (req, res, next) => {
             return res.json({ message: "Project not found" });
           } else {
             Project.find({ _id: decoded.user.project }, (err, p) => {  
-              for (let i = 0; i < p.length;i++){
-                console.log(p[i].details.list);
-                // if(p[i].details.list[0].status =="done"){
-                //   done.push(p[i].details.list[0].title)
-                // }
-                // if(p[i].details.list[0].status =="doing"){
-                //   doing.push(p[i].details.list[0].title)
-                // }
-                // if(p[i].details.list[0].status =="toDo"){
-                //   toDo.push(p[i].details.list[0].title)
-                // }
-              }
-              newProject.project=p;
-              newProject.done=done;
-              newProject.doing=doing;
-              newProject.toDo=toDo;
-              console.log(doing)
+
               return res.json({ message: "all projects", project: newProject });
             }).populate("details");
           }

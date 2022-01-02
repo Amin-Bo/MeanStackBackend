@@ -106,7 +106,24 @@ router.get("/details/:_id", (req, res, next) => {
             console.log(err);
             return res.json({ message: "Project not found" });
           } else {
-            return res.json({ project: project });
+            let list=project.details.list;
+            let done=[];
+            let doing=[];
+            let toDo=[];
+            for (let i=0; i<list.length; i++) {
+              if(list[i].status =="doing") {
+                  doing.push(list[i].title)
+              }
+              if(list[i].status =="done") {
+                done.push(list[i].title)
+
+              }
+              if(list[i].status =="toDo") {
+                toDo.push(list[i].title)
+              }
+            }
+            console.log(list);
+            return res.json({ project: project ,todo: toDo ,done: done ,doing: doing });
           }
         }).populate("details");
       }
