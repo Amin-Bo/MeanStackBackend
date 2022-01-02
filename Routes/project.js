@@ -93,6 +93,9 @@ router.post("/AddProject", (req, res, next) => {
 });
 
 router.get("/project/:_id", (req, res, next) => {
+   let done =[];
+  let doing = [];
+  let toDo=[];
   Project.find({ _id: req.params._id }, (err, project) => {
     if (err) {
       console.log(err);
@@ -168,7 +171,7 @@ router.get("/projects/", (req, res, next) => {
             return res.json({ message: "Project not found" });
           } else {
             Project.find({ _id: decoded.user.project }, (err, p) => {  
-
+              
               return res.json({ message: "all projects", project: p });
             }).populate("details");
           }

@@ -6,6 +6,8 @@ const Project = require("../Models/projects");
 const User = require("../Models/users");
 
 //Add project
+
+
 router.post("/add/:_id", (req, res, next) => {
   let list = [];
   let newDetails = new Details({
@@ -17,26 +19,7 @@ router.post("/add/:_id", (req, res, next) => {
 
   Details.find({ project: req.params._id }, (err, project) => {
     //Error during exuting the query
-    if (project.length == 0) {
-      newDetails.save((err, details) => {
-        if (err) {
-          console.log(err);
-          return res.json({ message: "something wrong !!" });
-        } else {
-          Project.findOneAndUpdate(
-            { _id: req.params._id },
-            { $set: { details: details._id } },
-            (err, p) => {
-              if (err) {
-                console.log(err);
-                return res.json({ message: "errr" });
-              }
-            }
-          );
-          return res.json({ details: details });
-        }
-      });
-    } else if (project.length > 0) {
+    if (project.length > 0) {
       Details.updateOne(
         { project: req.params._id },
         {
@@ -63,9 +46,7 @@ router.post("/add/:_id", (req, res, next) => {
           }
         }
       );
-    } else {
-      // console.log(err)
-    }
+    } 
   });
 });
 
@@ -105,7 +86,8 @@ router.get("/details/:_id", (req, res, next) => {
           if (err) {
             console.log(err);
             return res.json({ message: "Project not found" });
-          } else {
+          } 
+          else {
             let list=project.details.list;
             let done=[];
             let doing=[];
@@ -186,4 +168,5 @@ router.delete('/delete/:_id',(req, res) => {
       })
 })
 
+// router.post('addtask',)
 module.exports = router;
