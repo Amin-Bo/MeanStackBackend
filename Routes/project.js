@@ -169,7 +169,7 @@ router.get("/projects/", (req, res, next) => {
           } else {
             Project.find({ _id: decoded.user.project }, (err, p) => {  
 
-              return res.json({ message: "all projects", project: newProject });
+              return res.json({ message: "all projects", project: p });
             }).populate("details");
           }
         });
@@ -177,4 +177,42 @@ router.get("/projects/", (req, res, next) => {
     });
   });
 });
+router.get("/allProjects/", (req, res, next) => {
+  newProject = {};
+  let done =[];
+  let doing = [];
+  let toDo=[];
+  let token = req.headers.authorization || req.body.token;
+  //console.log(token)
+  jwt.verify(token, process.env.SECRET, (err, decoded) => {
+    let user = decoded.user;
+    //console.log(decoded)
+    User.findOne({ _id: user._id }, (err, user) => {
+      if (err) throw err;
+      else {
+        User.find({ _id: user._id }, (err, user) => {
+          if (err) {
+            console.log(err);
+            return res.json({ message: "Project not found" });
+          } else {
+            Project.find({ _id: decoded.user.project }, (err, p) => {  
+
+              return res.json({ message: "all projects", project: p });
+            })
+          }
+        });
+      }
+    });
+  });
+});
+/*router.get('/allProjects', (req, res, next)=>{
+  Project.find({},(err, p) => {
+    if (err) {
+      return res.json({ message:'error'})
+    }
+    else {
+      return res.json({ project: p })
+    }
+  })
+})*/
 module.exports = router;
